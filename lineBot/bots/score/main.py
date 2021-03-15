@@ -9,12 +9,24 @@ env = environ.Env()
 environ.Env.read_env()
 
 def score_registerJob(event, thisUser):
+  thisUser.where = 'score'
+  thisUser.status = 'wfi_job'
+  thisUser.save()
+
+  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+    text= "請輸入小老師名稱 :"
+  ))
+def score_applyJob(event, thisUser):
+  thisUser.where = ''
+  thisUser.status = ''
   thisUser.job = event.message.text
   thisUser.save()
+
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= "登記完成 !",
     quick_reply= QUICKREPLY_MENU,
   ))
+
 
 def score_main(event, thisUser):
   thisUser.where = 'score'
@@ -38,29 +50,10 @@ def score_gi_main(event, thisUser):
     ))
 
   if thisUser.status == 'wfi_testScores':
+    return send_score_to_sheet(event, thisUser)
 
-    testName = thisUser.memo.split('%')
-
-    thisUser.status = ''
-    thisUser.where = ''
-    thisUser.memo = ''
-    thisUser.save()
-
-    requests.post(
-      env('GAS_ENTRY'),
-      data = {
-        'subj' : thisUser.job if len(testName)==1 else testName[1],
-        'name' : testName[0],
-        'scores' : string_to_scores_list(event.message.text)
-      }
-    )
-
-    url = 'https://docs.google.com/spreadsheets/d/1OUR9r-VDK834KXHBubOWS1EqXB3Tre07q7HKXHxSYFE/edit?usp=sharing'
-
-    return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-      text= f"成績已送出(表單需要一點時間更新)\n{url}",
-      quick_reply= QUICKREPLY_MENU,
-    ))
+  if thisUser.status == 'wfi_job':
+    return score_applyJob(event, thisUser)
 
 def string_to_scores_list(string):
   scoreTable = dict()
@@ -77,3 +70,27 @@ def string_to_scores_list(string):
     outputList.append(str(scoreTable.get(number, "")))
 
   return outputList
+def send_score_to_sheet(event, thisUser):
+
+  testName = thisUser.memo.split('%')
+
+  thisUser.status = ''
+  thisUser.where = ''
+  thisUser.memo = ''
+  thisUser.save()
+
+  requests.post(
+    env('GAS_ENTRY'),
+    data = {
+      'subj' : thisUser.job if len(testName)==1 else testName[1],
+      'name' : testName[0],
+      'scores' : string_to_scores_list(event.message.text)
+    }
+  )
+
+  url = 'https://docs.google.com/spreadsheets/d/1OUR9r-VDK834KXHBubOWS1EqXB3Tre07q7HKXHxSYFE/edit?usp=sharing'
+
+  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+    text= f"成績已送出(表單需要一點時間更新)\n{url}",
+    quick_reply= QUICKREPLY_MENU,
+  ))
