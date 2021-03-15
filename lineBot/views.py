@@ -42,7 +42,7 @@ QUICKREPLY_MENU = QuickReply(items=[
 
 from lineBot.models import User
 
-from .bots import registeration, tool
+from .bots import registeration, tool, chatBot
 from .bots.score.main import score_main, score_gi_main, score_registerJob
 
 
@@ -70,10 +70,7 @@ def handle_message(event):
     if event.message.text == command:
       return commandList[command](event, thisUser)
 
-  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "menu :",
-    quick_reply= QUICKREPLY_MENU,
-  ))
+  return chatBot.chat_bot(event, thisUser)
 
 
 @handler.add(PostbackEvent)
