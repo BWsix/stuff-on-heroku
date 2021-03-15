@@ -8,7 +8,7 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
-def registerJob(event, thisUser):
+def score_registerJob(event, thisUser):
   thisUser.job = event.message.text
   thisUser.save()
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
@@ -58,7 +58,7 @@ def score_gi_main(event, thisUser):
     url = 'https://docs.google.com/spreadsheets/d/1OUR9r-VDK834KXHBubOWS1EqXB3Tre07q7HKXHxSYFE/edit?usp=sharing'
 
     return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-      text= f"成績已送出\n{url}",
+      text= f"成績已送出(表單需要一點時間更新)\n{url}",
       quick_reply= QUICKREPLY_MENU,
     ))
 

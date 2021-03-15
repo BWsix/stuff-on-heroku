@@ -43,7 +43,7 @@ QUICKREPLY_MENU = QuickReply(items=[
 from lineBot.models import User
 
 from .bots import registeration, tool
-from .bots.score.main import score_main, score_gi_main
+from .bots.score.main import score_main, score_gi_main, score_registerJob
 
 
 whereList = {
@@ -53,6 +53,7 @@ whereList = {
 
 commandList = {
   'score' : score_main,
+  'job' : score_registerJob,
   'help' : tool.help,
   'bike' : tool.bike,
 }
