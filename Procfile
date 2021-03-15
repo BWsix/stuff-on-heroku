@@ -1,1 +1,1 @@
-web: gunicorn site_dev.wsgi
+web: gunicorn shite.wsgi
