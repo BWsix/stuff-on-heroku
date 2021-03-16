@@ -67,17 +67,25 @@ commandList = {
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-  thisUser = User.objects.get(lineID=event.source.user_id)
+  if event.source.type == 'user':
+    thisUser = User.objects.get(lineID=event.source.user_id)
 
-  for where in whereList:
-    if thisUser.where == where:
-      return whereList[where](event, thisUser)
+    for where in whereList:
+      if thisUser.where == where:
+        return whereList[where](event, thisUser)
 
-  for command in commandList:
-    if event.message.text == command:
-      return commandList[command](event, thisUser)
+    for command in commandList:
+      if event.message.text == command:
+        return commandList[command](event, thisUser)
 
-  return chatBot.chat_bot(event, thisUser)
+    return chatBot.chat_bot(event, thisUser)
+
+  if event.source.type == 'group':
+    if event.message.text == 'bike':
+      return tool.bike_group(event)
+
+    return chatBot.chat_bot_group(event)
+
 
 
 @handler.add(PostbackEvent)
@@ -99,7 +107,7 @@ def handle_follow(event):
   newUser.save()
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "請輸入 座號 + '空格' + 姓名 : "
+    text= "請輸入 座號 + 空格 + 姓名 :"
   ))
 
 

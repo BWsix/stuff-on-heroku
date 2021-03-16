@@ -20,8 +20,10 @@ scripts = {
   '地理': "gan",
   'loli': "Lolis are cute, and thus I love lolis.",
   '蘿莉': "很可愛<3",
-  'shota': "Shotas are cute, and thus I love lolis.",
+  'shota': "Shotas are cute, and thus I love shotas.",
   '正太': "很可愛<3",
+  'gan': "怡潔不要鬧",
+  'ok': "收到 !",
 }
 
 def chat_bot(event, thisUser):
@@ -39,3 +41,13 @@ def chat_bot(event, thisUser):
     text= f"hello, {thisUser.name}.",
     quick_reply=QUICKREPLY_MENU(event, thisUser)
   ))
+
+
+def chat_bot_group(event):
+  for kw in scripts:
+    if(event.message.text == kw):
+      return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+        text= scripts[kw],
+      ))
+
+  return

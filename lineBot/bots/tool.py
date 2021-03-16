@@ -26,3 +26,18 @@ def bike(event, thisUser):
     text= result,
     quick_reply=QUICKREPLY_MENU(event, thisUser)
   ))
+
+def bike_group(event):
+  url = 'https://data.tycg.gov.tw/api/v1/rest/datastore/a1b4714b-3b75-4ff8-a8f2-cc377e4eaa0f?format=json'
+
+  resp = requests.get(url)
+  data = resp.json()['result']['records'][1]
+  update = data['mday'][8:]
+
+  result = f"""車子數量 : {data['sbi']}
+空位 : {data['bemp']}
+最後更新時間 : {update[:2]}:{update[2:4]}:{update[4:]}"""
+
+  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+    text= result
+  ))
