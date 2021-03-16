@@ -24,7 +24,7 @@ def score_applyJob(event, thisUser):
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= "登記完成 !",
-    quick_reply= QUICKREPLY_MENU,
+    quick_reply= QUICKREPLY_MENU(event, thisUser),
   ))
 
 
@@ -92,5 +92,5 @@ def send_score_to_sheet(event, thisUser):
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= f"成績已送出(表單需要一點時間更新)\n{url}",
-    quick_reply= QUICKREPLY_MENU,
+    quick_reply= QUICKREPLY_MENU(event, thisUser),
   ))

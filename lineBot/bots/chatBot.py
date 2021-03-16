@@ -32,10 +32,10 @@ def chat_bot(event, thisUser):
     if(event.message.text == kw):
       return line_bot_api.reply_message(event.reply_token,TextSendMessage(
         text= scripts[kw],
-        quick_reply=QUICKREPLY_MENU
+        quick_reply=QUICKREPLY_MENU(event, thisUser)
       ))
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= f"hello, {thisUser.name}.",
-    quick_reply=QUICKREPLY_MENU
+    quick_reply=QUICKREPLY_MENU(event, thisUser)
   ))

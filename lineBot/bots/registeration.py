@@ -22,5 +22,5 @@ def register(event, thisUser):
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= "已建檔完成 !",
-    quick_reply= QUICKREPLY_MENU,
+    quick_reply= QUICKREPLY_MENU(event, thisUser),
   ))

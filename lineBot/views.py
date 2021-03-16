@@ -31,14 +31,21 @@ def webhook(request: HttpRequest):
     return HttpResponseBadRequest(messages)
   return HttpResponse("OK")
 
-QUICKREPLY_MENU = QuickReply(items=[
-  QuickReplyButton(
-    action= PostbackAction(label="登記成績", data="score")
-  ),
-  QuickReplyButton(
-    action= PostbackAction(label="指令列表", data="help")
-  ),
-])
+def QUICKREPLY_MENU(event, thisUser):
+  items = [
+    QuickReplyButton(
+      action= PostbackAction(label="指令列表", data="help")
+    )
+  ]
+
+  if not(thisUser.job is None):
+    items.append(
+      QuickReplyButton(
+        action= PostbackAction(label="登記成績", data="score")
+      )
+    )
+
+  return QuickReply(items=items)
 
 from lineBot.models import User
 

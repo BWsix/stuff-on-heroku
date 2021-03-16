@@ -8,7 +8,7 @@ import requests
 def help(event, thisUser):
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= """bike : 取得校門口Ubike資訊""",
-    quick_reply= QUICKREPLY_MENU
+    quick_reply= QUICKREPLY_MENU(event, thisUser)
   ))
 
 def bike(event, thisUser):
@@ -24,5 +24,5 @@ def bike(event, thisUser):
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= result,
-    quick_reply=QUICKREPLY_MENU
+    quick_reply=QUICKREPLY_MENU(event, thisUser)
   ))
