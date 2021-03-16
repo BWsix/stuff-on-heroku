@@ -59,11 +59,14 @@ def string_to_scores_list(string):
   scoreTable = dict()
 
   for segment in string.split('\n'):
-    number = int(segment[:2])
-    score = ""
-    score += segment[2:]
+    try:
+      number = int(segment[:2])
+      score = ""
+      score += segment[2:]
 
-    scoreTable[number] = score
+      scoreTable[number] = score
+    except:
+      pass
 
   outputList = list()
   for number in range(1, 43+1):
