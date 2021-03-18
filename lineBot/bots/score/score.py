@@ -8,7 +8,7 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
-def score_registerJob(event, thisUser):
+def registerJob(event, thisUser):
   thisUser.where = 'score'
   thisUser.status = 'wfi_job'
   thisUser.save()
@@ -16,7 +16,7 @@ def score_registerJob(event, thisUser):
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= "請輸入科目 :"
   ))
-def score_applyJob(event, thisUser):
+def applyJob(event, thisUser):
   thisUser.where = ''
   thisUser.status = ''
   thisUser.job = event.message.text
@@ -28,7 +28,7 @@ def score_applyJob(event, thisUser):
   ))
 
 
-def score_main(event, thisUser):
+def main(event, thisUser):
   thisUser.where = 'score'
   thisUser.status = 'wfi_testName'
   thisUser.save()
@@ -38,7 +38,10 @@ def score_main(event, thisUser):
   ))
 
 
-def score_gi_main(event, thisUser):
+# def PB_handler(event, thisUser):
+#   pass
+
+def get_input_main(event, thisUser):
   if thisUser.status == 'wfi_testName':
 
     thisUser.status = 'wfi_testScores'
@@ -53,7 +56,7 @@ def score_gi_main(event, thisUser):
     return send_score_to_sheet(event, thisUser)
 
   if thisUser.status == 'wfi_job':
-    return score_applyJob(event, thisUser)
+    return applyJob(event, thisUser)
 
 def string_to_scores_list(string):
   scoreTable = dict()

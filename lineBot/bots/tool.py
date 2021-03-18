@@ -13,6 +13,10 @@ def help(event, thisUser):
 
 
 def home(event, thisUser):
+  thisUser.where = ""
+  thisUser.status = ""
+  thisUser.save()
+
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
     text= f"hello, {thisUser.name}.",
     quick_reply= QUICKREPLY_MENU(event, thisUser)

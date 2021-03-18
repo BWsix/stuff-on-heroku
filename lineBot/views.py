@@ -34,7 +34,7 @@ def webhook(request: HttpRequest):
 def QUICKREPLY_MENU(event, thisUser):
   items = [
     QuickReplyButton(
-      action= PostbackAction(label="訂餐", data="lunch")
+      action= PostbackAction(label="訂餐", data="_lunch")
     ),
     QuickReplyButton(
       action= PostbackAction(label="指令列表", data="help")
@@ -44,7 +44,7 @@ def QUICKREPLY_MENU(event, thisUser):
   if not(thisUser.job is None):
     items.append(
       QuickReplyButton(
-        action= PostbackAction(label="登記成績", data="score")
+        action= PostbackAction(label="登記成績", data="_score")
       )
     )
 
@@ -58,19 +58,27 @@ from .bots.lunch import lunch
 
 whereList = {
   'register' : registeration.register,
-  'score' : score.score_gi_main,
+  'score' : score.get_input_main,
+  'lunch' : lunch.MSG_handler,
+}
+
+_whereList = {
+  'lunch' : lunch.PB_handler,
+  # 'score' : score.PB_handler,
 }
 
 commandList = {
-  'score' : score.score_main,
-  'job' : score.score_registerJob,
-
-  'lunch' : lunch.lunch_main,
+  'job' : score.registerJob,
 
   'help' : tool.help,
   'bike' : tool.bike,
+}
 
-  'home' : tool.home,
+_commandList = {
+  'help' : tool.help,
+
+  '_score' : score.main,
+  '_lunch' : lunch.main,
 }
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -99,9 +107,13 @@ def handle_message(event):
 def handle_postback(event):
   thisUser = User.objects.get(lineID=event.source.user_id)
 
-  for command in commandList:
+  for where in _whereList:
+    if thisUser.where == where:
+      return _whereList[where](event, thisUser)
+
+  for command in _commandList:
     if event.postback.data == command:
-      return commandList[command](event, thisUser)
+      return _commandList[command](event, thisUser)
 
 
 @handler.add(FollowEvent)
