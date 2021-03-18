@@ -82,8 +82,7 @@ def handle_message(event):
 
   if event.source.type == 'group':
     if event.message.text == 'bike':
-      return tool.bike_group(event)
-
+      return tool.bike(event, None)
     return chatBot.chat_bot_group(event)
 
 
