@@ -14,7 +14,7 @@ def score_registerJob(event, thisUser):
   thisUser.save()
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "請輸入小老師名稱 :"
+    text= "請輸入科目 :"
   ))
 def score_applyJob(event, thisUser):
   thisUser.where = ''

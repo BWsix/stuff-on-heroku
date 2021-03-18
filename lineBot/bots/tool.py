@@ -11,6 +11,14 @@ def help(event, thisUser):
     quick_reply= QUICKREPLY_MENU(event, thisUser)
   ))
 
+
+def home(event, thisUser):
+  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+    text= "home menu:",
+    quick_reply= QUICKREPLY_MENU(event, thisUser)
+  ))
+
+
 def bike(event, thisUser):
   url = 'https://data.tycg.gov.tw/api/v1/rest/datastore/a1b4714b-3b75-4ff8-a8f2-cc377e4eaa0f?format=json'
 

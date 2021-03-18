@@ -34,6 +34,9 @@ def webhook(request: HttpRequest):
 def QUICKREPLY_MENU(event, thisUser):
   items = [
     QuickReplyButton(
+      action= PostbackAction(label="訂餐", data="lunch")
+    ),
+    QuickReplyButton(
       action= PostbackAction(label="指令列表", data="help")
     )
   ]
@@ -50,19 +53,24 @@ def QUICKREPLY_MENU(event, thisUser):
 from lineBot.models import User
 
 from .bots import registeration, tool, chatBot
-from .bots.score.main import score_main, score_gi_main, score_registerJob
-
+from .bots.score import score
+from .bots.lunch import lunch
 
 whereList = {
   'register' : registeration.register,
-  'score' : score_gi_main,
+  'score' : score.score_gi_main,
 }
 
 commandList = {
-  'score' : score_main,
-  'job' : score_registerJob,
+  'score' : score.score_main,
+  'job' : score.score_registerJob,
+
+  'lunch' : lunch.lunch_main,
+
   'help' : tool.help,
   'bike' : tool.bike,
+
+  'home' : tool.home,
 }
 
 @handler.add(MessageEvent, message=TextMessage)
