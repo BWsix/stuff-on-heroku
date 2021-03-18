@@ -14,7 +14,7 @@ def help(event, thisUser):
 
 def home(event, thisUser):
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "home menu:",
+    text= f"hello, {thisUser.name}.",
     quick_reply= QUICKREPLY_MENU(event, thisUser)
   ))
 
