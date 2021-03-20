@@ -8,6 +8,8 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models.actions import PostbackAction
 from linebot.models.events import FollowEvent, PostbackEvent, MessageEvent, TextMessage, UnfollowEvent
 from linebot.models.send_messages import QuickReply, QuickReplyButton, TextSendMessage
+from linebot.models.messages import ImageMessage
+
 
 import environ
 env = environ.Env()
@@ -135,3 +137,15 @@ def handle_unfollow(event):
     User.objects.get(lineID=event.source.user_id).delete()
   except Exception:
     pass
+
+
+from lineBot.bots.lunch import admin
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handel_image(event):
+  thisUser = User.objects.get(lineID=event.source.user_id)
+
+  if thisUser.status == 'wfi_update_menu':
+    return admin.update_menu_getImage(event, thisUser)
+
+

@@ -21,6 +21,9 @@ class LunchMenu(models.Model):
 
   prices = models.CharField(max_length=30, null=True)
 
+  def __str__(self):
+    return self.date
+
 class LunchOrder(models.Model):
   orderer = models.ForeignKey(User, on_delete=models.CASCADE)
 
