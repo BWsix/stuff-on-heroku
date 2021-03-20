@@ -1,8 +1,9 @@
 from linebot.models.send_messages import TextSendMessage
 
 from lineBot.views import line_bot_api, QUICKREPLY_MENU
+from .gas import send_score_to_sheet
 
-import requests
+import threading
 
 import environ
 env = environ.Env()
@@ -53,50 +54,17 @@ def get_input_main(event, thisUser):
     ))
 
   if thisUser.status == 'wfi_testScores':
-    return send_score_to_sheet(event, thisUser)
+
+    thread = threading.Thread(target=send_score_to_sheet, args=(event, thisUser))
+    thread.start()
+
+    url = 'https://docs.google.com/spreadsheets/d/1OUR9r-VDK834KXHBubOWS1EqXB3Tre07q7HKXHxSYFE/edit?usp=sharing'
+
+    return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+      text= f"成績已送出(表單需要一點時間更新)\n{url}",
+      quick_reply= QUICKREPLY_MENU(event, thisUser),
+    ))
 
   if thisUser.status == 'wfi_job':
     return applyJob(event, thisUser)
 
-def string_to_scores_list(string):
-  scoreTable = dict()
-
-  for segment in string.split('\n'):
-    try:
-      number = int(segment[:2])
-      score = ""
-      score += segment[2:]
-
-      scoreTable[number] = score
-    except:
-      pass
-
-  outputList = list()
-  for number in range(1, 43+1):
-    outputList.append(str(scoreTable.get(number, "")))
-
-  return outputList
-def send_score_to_sheet(event, thisUser):
-
-  testName = thisUser.memo.split('%')
-
-  thisUser.status = ''
-  thisUser.where = ''
-  thisUser.memo = ''
-  thisUser.save()
-
-  requests.post(
-    env('GAS_ENTRY'),
-    data = {
-      'subj' : thisUser.job if len(testName)==1 else testName[1],
-      'name' : testName[0],
-      'scores' : string_to_scores_list(event.message.text)
-    }
-  )
-
-  url = 'https://docs.google.com/spreadsheets/d/1OUR9r-VDK834KXHBubOWS1EqXB3Tre07q7HKXHxSYFE/edit?usp=sharing'
-
-  return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= f"成績已送出(表單需要一點時間更新)\n{url}",
-    quick_reply= QUICKREPLY_MENU(event, thisUser),
-  ))

@@ -102,7 +102,6 @@ def handle_message(event):
     return chatBot.chat_bot_group(event)
 
 
-
 @handler.add(PostbackEvent)
 def handle_postback(event):
   thisUser = User.objects.get(lineID=event.source.user_id)
@@ -132,4 +131,7 @@ def handle_follow(event):
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-  User.objects.get(lineID=event.source.user_id).delete()
+  try:
+    User.objects.get(lineID=event.source.user_id).delete()
+  except Exception:
+    pass
