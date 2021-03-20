@@ -12,15 +12,22 @@ def help(event, thisUser):
   ))
 
 
-def home(event, thisUser):
+def home(event, thisUser, text=None):
   thisUser.where = ""
   thisUser.status = ""
   thisUser.save()
 
+  if text is None:
+    return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+      text= f"hello, {thisUser.name}.",
+      quick_reply= QUICKREPLY_MENU(event, thisUser)
+    ))
+
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= f"hello, {thisUser.name}.",
+    text= text,
     quick_reply= QUICKREPLY_MENU(event, thisUser)
   ))
+
 
 
 def bike(event, thisUser):

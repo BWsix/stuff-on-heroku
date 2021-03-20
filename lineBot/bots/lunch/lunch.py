@@ -35,6 +35,8 @@ def main(event, thisUser):
 def MSG_handler(event, thisUser):
   if thisUser.status == 'main_menu':
     return main(event, thisUser)
+  if thisUser.status == 'wft_update_price':
+    return admin.update_price(event, thisUser)
 
 
 dataList = {

@@ -47,13 +47,11 @@ def update_menu_getImage(event, thisUser):
   thread = threading.Thread(target=upload_image, args=(path,))
   thread.start()
 
-  return tool.home(event, thisUser)
-
   thisUser.status = 'wft_update_price'
   thisUser.save()
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "菜單已更新"
+    text= "請輸入價格(以空格分隔)"
   ))
 
 
@@ -69,3 +67,17 @@ def upload_image(path):
     date=str(today())
   )
   newMenu.save()
+
+def update_price(event, thisUser):
+
+  test = event.message.text.split()
+  if len(test) != 8:
+    return line_bot_api.reply_message(event.reply_token,TextSendMessage(
+      text= "請重新輸入價格(數量錯誤)"
+    ))
+
+  thisMenu = LunchMenu.objects.get(date=str(today()))
+  thisMenu.prices = event.message.text
+  thisMenu.save()
+
+  return tool.home(event, thisUser, '菜單更新完成 !')
