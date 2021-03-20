@@ -6,7 +6,7 @@ from lineBot.bots import tool
 
 from . import normal, admin
 
-def main(event, thisUser):
+def main(event, thisUser, text=None):
   thisUser.where = 'lunch'
   thisUser.status = 'main_menu'
   thisUser.save()
@@ -27,21 +27,28 @@ def main(event, thisUser):
 
 
   return line_bot_api.reply_message(event.reply_token,TextSendMessage(
-    text= "訂餐選單",
+    text= text if text else "訂餐選單",
     quick_reply= QuickReply(items=items)
   ))
 
+textList = {
+  'main_menu' : main,
+
+  'wft_update_price' : admin.update_price,
+
+  'wfi_normal_order_index' : normal.get_index,
+
+}
 
 def MSG_handler(event, thisUser):
-  if thisUser.status == 'main_menu':
-    return main(event, thisUser)
-  if thisUser.status == 'wft_update_price':
-    return admin.update_price(event, thisUser)
+  for text in textList:
+    if thisUser.status == text:
+      return textList[text](event, thisUser)
 
 
 dataList = {
   '_update_menu' : admin.update_menu,
-  '_lunch_normal' : normal.normal_create_order,
+  '_lunch_normal' : normal.normal_make_order,
 
   '_home' : tool.home,
 }
